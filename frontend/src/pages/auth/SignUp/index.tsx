@@ -2,8 +2,8 @@ import { Container, TextField, Button, Card } from "@mui/material";
 import { useState } from "react";
 import { Col, Row, Form, Image } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { errorToast, successToast, warningToast } from "../../../services/toaster.service";
-import axios from "axios";
+import { successToast, warningToast } from "../../../services/toaster.service";
+import { postData } from "../../../services/axios.service";
 
 const SignUp = () => {
 
@@ -11,7 +11,7 @@ const SignUp = () => {
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
       const [confirmpassword, setConfirmPassword] = useState("");
-      const [isLoading, setLoading] = useState("");
+      // const [isLoading, setLoading] = useState("");
 
       const navigate = useNavigate();
 
@@ -25,17 +25,11 @@ const SignUp = () => {
                         password,
                         email,
                   };
-                  try {
-                        const response = await axios.post("http://localhost:8080/api/v1/auth/register", data);
 
-                        console.log(response.data);
-
-                        if (response.data.status) {
-                              navigate("/");
-                              successToast(response.data.message);
-                        }
-                  } catch (error: any) {
-                        errorToast(error.response.data.error);
+                  const response = await postData("/auth/register", data);
+                  if (response.status) {
+                        navigate("/");
+                        successToast(response.message);
                   }
             }
       };
@@ -44,14 +38,14 @@ const SignUp = () => {
 
 
       return (
-            <>
+            <div>
                   <Container>
-                        <Row className="d-flex justify-content-center w-100 ">
+                        <Row className="d-flex justify-content-between align-items-center vh-100">
 
                               <Col xs={12} md={12}>
-                                    <Card className="d-flex shadow">
+                                    <div className="d-flex shadow mt-5">
 
-                                          <Image className="w-50" src="https://images.unsplash.com/photo-1512729343400-4fcf83a18f72?auto=format&fit=crop&q=80&w=2072&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" rounded-start />
+                                          <Image className="w-50 rounded-start" src="https://images.unsplash.com/photo-1512729343400-4fcf83a18f72?auto=format&fit=crop&q=80&w=2072&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
 
 
                                           <Card className="w-50 bg-body-secondary">
@@ -108,19 +102,19 @@ const SignUp = () => {
                                                       </Button>
 
                                                       <p className='text-center mt-2'>Already Have a Account?
-                                                            <a href="./" className='ms-2'>Login</a>
+                                                            <a href="./" className='ms-2 text-decoration-none'>Login</a>
                                                       </p>
 
                                                 </Form>
                                           </Card>
-                                    </Card>
+                                    </div>
 
                               </Col>
                         </Row>
 
 
                   </Container >
-            </>
+            </div>
       )
 };
 

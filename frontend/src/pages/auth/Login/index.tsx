@@ -1,102 +1,134 @@
 import { Col, Row, Form, Image } from "react-bootstrap";
 import { Container, TextField, Button, Card } from "@mui/material";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { errorToast, successToast } from "../../../services/toaster.service";
+import { successToast } from "../../../services/toaster.service";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { useDispatch } from "react-redux";
+import { Formik } from "formik";
+import { object, string } from "yup";
+import { AuthInterface } from "../../../interface/auth.interface";
+import { postData } from "../../../services/axios.service";
+import { login } from "../../../slice/authSlice";
 
 
 const Login = () => {
 
-      const [email, setEmail] = useState("");
-      const [password, setPassword] = useState("");
 
+      let initailValues = {
+            email: "",
+            password: "",
+      };
+
+      const dispatch = useDispatch();
       const navigate = useNavigate();
 
-      const loginSubmitHandler = async (e: any) => {
-            e.preventDefault();
-            const data = {
-                  email,
-                  password,
-            };
-            try {
-                  const resp = await axios.post("http://localhost:8080/api/v1/auth/login", data);
+      let authValidationSchema = object({
+            email: string().email().required("Email is required"),
+            password: string().min(8, "Passsword should be a least 8 character").required("Password is required"),
+      });
 
-                  console.log(resp.data);
+      const loginHandler = async (values: AuthInterface) => {
+            const resp = await postData("/auth/login", values);
 
-                  if (resp.data.status) {
-                        navigate("/Signup");
-                        successToast(resp.data.message)
-                  }
+            if (resp.status === "success") {
+                  const data = {
+                        jwt: resp.token,
+                        role: resp.authData.role,
+                        email: resp.authData.email,
+                  };
+                  dispatch(login(data));
+                  navigate("/products");
+                  successToast("User is logged in successfully");
             }
-            catch (error: any) {
-
-                  errorToast(error.response.data.message)
-            }
-
-      }
+      };
 
       return (
             <>
                   <Container>
-                        <Row className="d-flex justify-content-center w-100 ">
+                        <Row className="d-flex justify-content-between align-items-center vh-100">
 
                               <Col xs={12} md={12}>
-                                    <Card className="d-flex shadow">
+                                    <div className="d-flex shadow ">
 
-                                          <Image className="w-50" src="https://images.unsplash.com/photo-1512729343400-4fcf83a18f72?auto=format&fit=crop&q=80&w=2072&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" rounded-start />
+                                          <Image className="w-50 rounded-start" src="https://images.unsplash.com/photo-1512729343400-4fcf83a18f72?auto=format&fit=crop&q=80&w=2072&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
 
 
                                           <Card className="w-50 bg-body-secondary">
-                                                <Form onSubmit={loginSubmitHandler} className="w-75 m-auto p-3 ">
-                                                      <h1>Login </h1>
 
-                                                      <TextField
-                                                            id="email"
-                                                            label="Email"
-                                                            variant="outlined"
-                                                            className="mb-4"
-                                                            required
-                                                            fullWidth
-                                                            placeholder="Enter Your Email"
-                                                            autoFocus
-                                                            onChange={(e) => setEmail(e.target.value)}
+                                                <Formik
+                                                      initialValues={initailValues}
+                                                      validationSchema={authValidationSchema}
+                                                      onSubmit={loginHandler}>
 
-                                                      />
+                                                      {({ handleChange, handleSubmit, errors, touched, handleBlur }) => (
 
-                                                      <TextField
-                                                            id="password"
-                                                            label="Password"
-                                                            variant="outlined"
-                                                            className="mb-4"
-                                                            required
-                                                            fullWidth
-                                                            placeholder="Enter Password"
-                                                            onChange={(e) => setPassword(e.target.value)}
-                                                      />
+                                                            <Form className="w-75 m-auto p-3 " onSubmit={handleSubmit}>
+                                                                  <h1>Login </h1>
+                                                                  <p>Login to access the page.</p>
 
-                                                      <p>
-                                                            <a href="./signup" className='text-danger text-decoration-none'>Forgot Password?</a>
-                                                      </p>
+                                                                  <div className="mb-4">
+                                                                        <TextField
+                                                                              id="email"
+                                                                              label="Email"
+                                                                              name="email"
+                                                                              variant="outlined"
+                                                                              className="mb-4"
+                                                                              required
+                                                                              fullWidth
+                                                                              placeholder="Enter Your Email"
+                                                                              autoFocus
+                                                                              onChange={handleChange}
+                                                                              onBlur={handleBlur}
 
-                                                      <Button type="submit" variant="contained">
-                                                            Login
-                                                      </Button><br />
+                                                                        />
+                                                                        <span className="text-danger">
+                                                                              {touched.email && errors.email}
+                                                                        </span>
+                                                                  </div>
 
-                                                      <Button type="submit" variant="contained" className="bg-white text-black mt-3">
-                                                            <FontAwesomeIcon icon={faGoogle} size="xl" style={{ color: "#ff0000", }} className="me-2" />
-                                                            Login with Google
-                                                      </Button>
+                                                                  <div>
+                                                                        <TextField
+                                                                              id="password"
+                                                                              name="password"
+                                                                              variant="outlined"
+                                                                              required
+                                                                              fullWidth
+                                                                              onBlur={handleBlur}
+                                                                              label="Password"
+                                                                              placeholder="Enter password here"
+                                                                              onChange={handleChange}
+                                                                        />
+                                                                        <span className="text-danger">
+                                                                              {touched.password && errors.password}
+                                                                        </span>
+                                                                  </div>
 
-                                                      <p className='text-center mt-2'>Don't Have a Account?
-                                                            <a href="./signup" className='ms-2 text-decoration-none'>Signup</a>
-                                                      </p>
+                                                                  <p className="mb-5">
+                                                                        <a href="./signup" className='text-danger text-decoration-none float-end'>Forgot Password?</a>
+                                                                  </p>
 
-                                                </Form>
+                                                                  <Button type="submit" variant="contained">
+                                                                        Login
+                                                                  </Button><br />
+
+                                                                  <Button type="submit" variant="contained" className="bg-white text-black mt-3">
+                                                                        <FontAwesomeIcon icon={faGoogle} size="xl" style={{ color: "#ff0000", }} className="me-2" />
+                                                                        Login with Google
+                                                                  </Button>
+
+                                                                  <p className='text-center mt-2'>Don't Have a Account?
+                                                                        <a href="./signup" className='ms-2 text-decoration-none'>Signup</a>
+                                                                  </p>
+
+                                                            </Form>
+                                                      )}
+
+                                                </Formik>
+
+
                                           </Card>
-                                    </Card>
+                                    </div>
 
                               </Col>
                         </Row>
