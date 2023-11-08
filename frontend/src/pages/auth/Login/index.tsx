@@ -37,7 +37,13 @@ const Login = () => {
                         email: resp.authData.email,
                   };
                   dispatch(login(data));
-                  navigate("/products");
+
+                  if (resp.authData.role === "admin") {
+                        navigate("/products");
+                  } else if (resp.authData.role === "user") {
+                        navigate("/all/products");
+                  }
+
                   successToast("User is logged in successfully");
             }
       };

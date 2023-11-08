@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import { useEffect, useState } from 'react'
-import { getData } from '../../../services/axios.service'
+import { getData, updateData } from "../../../services/axios.service";
 import Loader from '../../../components/Loader'
 import moment from 'moment'
 
@@ -20,6 +20,7 @@ import { errorToast, successToast } from '../../../services/toaster.service'
 import { useSelector } from 'react-redux'
 import { Container } from '@mui/material'
 import ProductFormModal from '../../../components/admin/forms/ProductFormModal'
+import Navmenu from '../../../components/Navbar'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
       [`&.${tableCellClasses.head}`]: {
@@ -45,7 +46,7 @@ const Products = () => {
 
       const [products, setProducts] = useState<any>({})
       const [isSpinning, setIsSpinning] = useState(false);
-      const [product, setProduct] = useState({
+      const [product, setProduct] = useState<any>({
             name: "",
             brand: "",
             price: "",
@@ -58,6 +59,7 @@ const Products = () => {
       const [isLoading, setIsLoading] = useState(false)
 
       const [open, setOpen] = useState(false);
+      const [edit, setEdit] = useState(false);
 
       const { jwt } = useSelector((state: any) => state.auth)
 
@@ -105,11 +107,11 @@ const Products = () => {
             //   };
             // });
             if (e.target.name === "productImage") {
-                  setProduct((prev) => {
+                  setProduct((prev: any) => {
                         return { ...prev, [e.target.name]: e.target.files[0] };
                   });
             } else {
-                  setProduct((prev) => {
+                  setProduct((prev: any) => {
                         return { ...prev, [e.target.name]: e.target.value };
                   });
             }
@@ -152,109 +154,164 @@ const Products = () => {
             }
       };
 
+      const handleUpdate = async (e: any) => {
+            e.preventDefault();
+
+            // delete product["_id"];
+            // delete product["id"];
+            // delete product["createdAt"];
+
+            const resp = await updateData(`/product/${product.id}`, product, jwt);
+
+            if (resp.status === "success") {
+                  const updatedProd = products.results.map((prod: any) => {
+                        return prod.id === product.id ? resp.data : prod;
+                  });
+                  setProducts((prev: any) => {
+                        return { ...prev, results: updatedProd };
+                  });
+                  setOpen(false);
+                  setEdit(false);
+            }
+      };
+
       const handleClickOpen = () => {
             setOpen(true);
       };
 
       const handleClose = () => {
             setOpen(false);
+            setEdit(false);
+            setProduct({
+                  name: "",
+                  brand: "",
+                  price: "",
+                  description: "",
+                  category: "",
+                  productImage: "",
+                  countInStock: "",
+            });
+      };
+
+      interface ProductInterface {
+            name: string;
+            brand: string;
+            category: string;
+            price: string;
+            description: string;
+            productImage: string;
+            countInStock: string;
+      }
+
+      const editProduct = (product: ProductInterface) => {
+            setOpen(true);
+            setEdit(true);
+            setProduct(product);
       };
 
       return (
 
+            <>
+                  <Navmenu />
+                  <TableContainer component={Paper}>
+                        {isLoading ? (
+                              <Loader />
+                        ) : (
+                              <Container className='p-5'>
+                                    <Button variant="primary" className="mb-3 m-auto" onClick={handleClickOpen}>
+                                          Add Product
+                                    </Button>
+                                    {products.status === 'success' && (
+                                          <Table sx={{ minWidth: 100 }} aria-label='customized table'>
+                                                <TableHead>
+                                                      <TableRow>
+                                                            <StyledTableCell>Image</StyledTableCell>
+                                                            <StyledTableCell align='left'>Name</StyledTableCell>
+                                                            <StyledTableCell align='right'>Price</StyledTableCell>
+                                                            <StyledTableCell align='right'>Category</StyledTableCell>
+                                                            <StyledTableCell align='right'>Brand</StyledTableCell>
+                                                            <StyledTableCell align='right'>
+                                                                  Created At
+                                                            </StyledTableCell>
+                                                            <StyledTableCell align='right'>Action</StyledTableCell>
+                                                      </TableRow>
+                                                </TableHead>
 
-            <TableContainer component={Paper}>
-                  {isLoading ? (
-                        <Loader />
-                  ) : (
-                        <Container className='p-5'>
-                              <Button variant="primary" className="mb-3 m-auto" onClick={handleClickOpen}>
-                                    Add Product
-                              </Button>
-                              {products.status === 'success' && (
-                                    <Table sx={{ minWidth: 100 }} aria-label='customized table'>
-                                          <TableHead>
-                                                <TableRow>
-                                                      <StyledTableCell>Image</StyledTableCell>
-                                                      <StyledTableCell align='left'>Name</StyledTableCell>
-                                                      <StyledTableCell align='right'>Price</StyledTableCell>
-                                                      <StyledTableCell align='right'>Category</StyledTableCell>
-                                                      <StyledTableCell align='right'>Brand</StyledTableCell>
-                                                      <StyledTableCell align='right'>
-                                                            Created At
-                                                      </StyledTableCell>
-                                                      <StyledTableCell align='right'>Action</StyledTableCell>
-                                                </TableRow>
-                                          </TableHead>
+                                                <TableBody>
+                                                      {products.results.map((product: any) => {
+                                                            return (
+                                                                  <StyledTableRow key={product.id}>
+                                                                        <StyledTableCell component='th' scope='row'>
+                                                                              <img
+                                                                                    src={product.productImage}
+                                                                                    width={'100'}
+                                                                                    height={'50'}
+                                                                              />
+                                                                        </StyledTableCell>
 
-                                          <TableBody>
-                                                {products.results.map((product: any) => {
-                                                      return (
-                                                            <StyledTableRow key={product.id}>
-                                                                  <StyledTableCell component='th' scope='row'>
-                                                                        <img
-                                                                              src={product.productImage}
-                                                                              width={'100'}
-                                                                              height={'50'}
-                                                                        />
-                                                                  </StyledTableCell>
+                                                                        <StyledTableCell align='left'>
+                                                                              {product.name}
+                                                                        </StyledTableCell>
 
-                                                                  <StyledTableCell align='left'>
-                                                                        {product.name}
-                                                                  </StyledTableCell>
+                                                                        <StyledTableCell align='right'>
+                                                                              ${product.price}
+                                                                        </StyledTableCell>
 
-                                                                  <StyledTableCell align='right'>
-                                                                        ${product.price}
-                                                                  </StyledTableCell>
+                                                                        <StyledTableCell align='right'>
+                                                                              {product.category}
+                                                                        </StyledTableCell>
 
-                                                                  <StyledTableCell align='right'>
-                                                                        {product.category}
-                                                                  </StyledTableCell>
+                                                                        <StyledTableCell align='right'>
+                                                                              {product.brand}
+                                                                        </StyledTableCell>
 
-                                                                  <StyledTableCell align='right'>
-                                                                        {product.brand}
-                                                                  </StyledTableCell>
-
-                                                                  <StyledTableCell align='right'>
-                                                                        {/* {new Date(product.createdAt).getFullYear() +
+                                                                        <StyledTableCell align='right'>
+                                                                              {/* {new Date(product.createdAt).getFullYear() +
                           "-" +
                           new Date(product.createdAt).getMonth() +
                           "-" +
                           new Date(product.createdAt).getDate()} */}
-                                                                        {moment(product.createdAt).format('YYYY-MM-DD')}
-                                                                  </StyledTableCell>
+                                                                              {moment(product.createdAt).format('YYYY-MM-DD')}
+                                                                        </StyledTableCell>
 
-                                                                  <StyledTableCell align='right'>
-                                                                        <Button variant='primary'>
-                                                                              <FaEdit />
-                                                                        </Button>
+                                                                        <StyledTableCell align='right'>
+                                                                              <Button
+                                                                                    variant="primary"
+                                                                                    onClick={(e) => editProduct(product)}
+                                                                              >
+                                                                                    <FaEdit />
+                                                                              </Button>
 
-                                                                        <Button
-                                                                              variant='danger'
-                                                                              className='ms-2'
-                                                                              onClick={e => deleteProduct(product.id)}
-                                                                        >
-                                                                              <AiFillDelete />
-                                                                        </Button>
-                                                                  </StyledTableCell>
-                                                            </StyledTableRow>
-                                                      )
-                                                })}
-                                          </TableBody>
-                                    </Table>
-                              )}
-                              <ProductFormModal
-                                    open={open}
-                                    handleClose={handleClose}
-                                    categories={categories}
-                                    handleChange={handleChange}
-                                    handleSubmit={handleSubmit}
-                                    isSpinning={isSpinning}
-                              />
-                        </Container>
-                  )}
-            </TableContainer>
+                                                                              <Button
+                                                                                    variant='danger'
+                                                                                    className='ms-2'
+                                                                                    onClick={e => deleteProduct(product.id)}
+                                                                              >
+                                                                                    <AiFillDelete />
+                                                                              </Button>
+                                                                        </StyledTableCell>
+                                                                  </StyledTableRow>
+                                                            )
+                                                      })}
+                                                </TableBody>
+                                          </Table>
+                                    )}
+                                    <ProductFormModal
+                                          open={open}
+                                          handleClose={handleClose}
+                                          categories={categories}
+                                          handleChange={handleChange}
+                                          handleSubmit={handleSubmit}
+                                          handleUpdate={handleUpdate}
+                                          isSpinning={isSpinning}
+                                          edit={edit}
+                                          product={product}
+                                    />
+                              </Container>
+                        )}
+                  </TableContainer>
 
+            </>
 
       )
 }
