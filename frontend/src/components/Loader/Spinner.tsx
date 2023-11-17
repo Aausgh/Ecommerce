@@ -1,7 +1,13 @@
-import Spinner from "react-bootstrap/Spinner";
 
 function ButtonSpinner() {
-    return <Spinner animation="grow" />;
+    return (
+        <div className="spinner" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div >
+    )
 }
 
 export default ButtonSpinner;

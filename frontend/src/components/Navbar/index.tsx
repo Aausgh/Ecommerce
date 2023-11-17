@@ -1,12 +1,19 @@
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Container, Form, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../slice/authSlice";
 import { successToast } from "../../services/toaster.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faUser } from '@fortawesome/free-solid-svg-icons'
+import { Link } from "react-router-dom";
+import { Typography } from "@mui/material";
+
+
 
 const Navmenu = () => {
+
+
     const { name, role } = useSelector((state: any) => state.auth);
+
 
     const dispatch = useDispatch();
 
@@ -15,40 +22,46 @@ const Navmenu = () => {
         dispatch(logout());
         successToast("Logged out successfully");
     };
-    return (
-        <Navbar expand="lg" className="bg-body-tertiary">
-            <Container>
 
-                <Navbar.Brand href="#">Daraz</Navbar.Brand>
+    return (
+        <Navbar expand="lg" style={{ background: "#f95706" }}>
+            <Container className="d-flex justify-content-around">
+
+                <Navbar.Brand href="#" className="text-white fs-2">
+                    Daraz
+                </Navbar.Brand>
+
 
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
 
-                    <Nav className="ms-auto d-flex align-items-center gap-2">
+                    <Nav className="ms-auto d-flex align-items-center gap-3">
 
 
+                        <Link to={"/home"} className="text-decoration-none text-white">
+                            <Typography >Home</Typography>
+                        </Link>
 
-                        <Nav.Link href="#">Home</Nav.Link>
-                        <Nav.Link href="#products">Products</Nav.Link>
+                        <Link to={"/all/products"} className="text-decoration-none text-white">
+                            <Typography>Products</Typography>
+                        </Link>
 
-                        {role === "user" && <FontAwesomeIcon icon={faCartShopping} size="sm" style={{ color: "#000000", }} />}
+                        <NavDropdown
+                            title={<span className=" text-white">
+                                <FontAwesomeIcon icon={faUser} size="sm" style={{ color: "#f4f4f5", marginRight: '5px' }} />
+                                {name}
+                            </span>} id="basic-nav-dropdown" >
 
-                        <div>
-                            {/* <FontAwesomeIcon icon={faUser} size="sm" style={{ color: "#000000", }} /> */}
+                            <NavDropdown.Item >Profile</NavDropdown.Item>
 
+                            <NavDropdown.Item onClick={logoutHandler}>
+                                Logout
+                            </NavDropdown.Item>
 
-                            <NavDropdown title='Name' id="basic-nav-dropdown">
-
-                                <NavDropdown.Item href="#action/3.1">Profile</NavDropdown.Item>
-
-                                <NavDropdown.Item href="#action/3.2" onClick={logoutHandler}>
-                                    Logout
-                                </NavDropdown.Item>
-
-                            </NavDropdown>
+                        </NavDropdown>
 
 
-                        </div>
+                        {role === "user" && <FontAwesomeIcon icon={faCartShopping} size="lg" style={{ color: "#f4f4f5", }} />}
 
                     </Nav>
 

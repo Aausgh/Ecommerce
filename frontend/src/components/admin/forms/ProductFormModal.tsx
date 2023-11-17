@@ -22,19 +22,24 @@ export default function ProductFormModal({
 }: any) {
     return (
         <Dialog open={open} onClose={handleClose}>
+
             <DialogTitle>
                 {edit ? "Update product form" : "Add Product Form"}
             </DialogTitle>
+
             <DialogContent>
+
                 {edit && (
                     <Row className="mb-2">
                         <Col md={6}>
                             <Form.Label>Product Image</Form.Label>
                             <br />
                             <Image src={product.productImage} width={"100"} height={"100"} />
+
                         </Col>
                     </Row>
                 )}
+
                 <Row>
                     <Col>
                         <TextField
@@ -51,6 +56,7 @@ export default function ProductFormModal({
                             value={product.name}
                         />
                     </Col>
+
                     <Col>
                         <TextField
                             autoFocus
@@ -66,6 +72,7 @@ export default function ProductFormModal({
                         />
                     </Col>
                 </Row>
+
                 <Row>
                     <Col>
                         <TextField
@@ -81,6 +88,7 @@ export default function ProductFormModal({
                             value={product.price}
                         />
                     </Col>
+
                     <Col>
                         <TextField
                             autoFocus
@@ -95,10 +103,13 @@ export default function ProductFormModal({
                             value={product.countInStock}
                         />
                     </Col>
+
                 </Row>
+
                 <Row>
                     <Col md={6}>
                         <FormControl fullWidth>
+
                             <InputLabel>Category</InputLabel>
                             <Select
                                 value={product.category}
@@ -114,8 +125,10 @@ export default function ProductFormModal({
                                     );
                                 })}
                             </Select>
+
                         </FormControl>
                     </Col>
+
                     <Col>
                         <TextField
                             autoFocus
@@ -131,6 +144,7 @@ export default function ProductFormModal({
                         />
                     </Col>
                 </Row>
+
                 {!edit && (
                     <Row>
                         <Col>

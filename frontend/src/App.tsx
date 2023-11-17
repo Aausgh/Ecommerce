@@ -8,6 +8,9 @@ import Products from './pages/admin/Products'
 import { ToastContainer } from 'react-toastify'
 import SecureRoute from './routes/SecureRoute'
 import UserProducts from "./pages/user/Products";
+import Home from './pages/user/Home'
+import AdminRoute from "./routes/AdminRoute";
+import ProductDetail from './pages/user/ProductDetail'
 
 function App() {
 
@@ -19,8 +22,13 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
 
         <Route path="" element={<SecureRoute />}>
-          <Route path="/products" element={<Products />} />
+          <Route path="" element={<AdminRoute />}>
+            <Route path="/products" element={<Products />} />
+          </Route>
+
           <Route path="/all/products" element={<UserProducts />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/details" element={<ProductDetail />} />
         </Route>
       </Routes>
       <ToastContainer />

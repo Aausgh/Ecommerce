@@ -1,95 +1,119 @@
 import { useEffect, useState } from "react";
-import NavbarComponent from "../../../components/Navbar";
+import NavMenu from "../../../components/Navbar";
 import { getData } from "../../../services/axios.service";
-import { Col, Container, Form, Row } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import ProductList from "../../../components/user/ProductList";
+import ProductSkeleton from "../../../components/Loader/ProductSkeleton";
+import Loader from "../../../components/Loader";
 
 const UserProducts = () => {
     const [products, setProducts] = useState<any>({});
-    const [categories, setCategories] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [categories, setCategories] = useState<any>([]);
+
 
     const getProducts = async () => {
+        setIsLoading(true);
         const resp = await getData("/product");
 
         setProducts(resp.data);
 
-        const categories = resp.data.products.map((product: any) => {
-            return product.category;
-        });
 
-        setCategories(categories);
+        const newcategories = resp.data.results.map((results: any) => {
+            return results.category;
+        });
+        setCategories([...new Set(newcategories)]);
+
+
+        setIsLoading(false);
     };
+
 
     useEffect(() => {
         getProducts();
     }, []);
 
-    function searchProduct(e: any) {
-        const searchedData = products.filter((product: any) => {
-            return product.title.toLowerCase().includes(e.target.value.toLowerCase());
-        });
-        setProducts(searchedData);
-    }
 
     function filterProducts(data: any) {
         if (data !== "") {
-            const filteredProd = products.filter((item: any) => {
+            const filteredProd = products.results.filter((item: any) => {
                 return item.category === data;
             });
             setProducts(filteredProd);
         } else {
-            setProducts(products);
+            setProducts(data.results);
         }
     }
 
+    function searchProduct(e: any) {
+        const searchedData = products.results.filter((product: any) => {
+            return product.title && product.title.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        setProducts(searchedData);
+    }
+
+
+
+
     return (
         <>
-            <NavbarComponent />
+            <NavMenu />
 
-            {products.status === "success" && (
+            <Container className="d-flex justify-content-between p-4">
 
-                <Container>
-                    <div className="d-flex justify-content-between mb-3 p-4">
+                <Form.Select
+                    style={{ width: "170px" }}
+                    size="sm"
+                    className="rounded-pill border-black"
+                    onChange={(e) => filterProducts(e.target.value)}
+                >
+                    <option value="">Filter by category</option>
+                    {categories.map((category: any) => {
+                        return (
+                            <option key={category} value={category}>
+                                {category}
+                            </option>
+                        );
+                    })}
+                </Form.Select>
 
-                        <Form.Select
-                            style={{ width: "170px" }}
-                            size="sm"
-                            className="rounded-pill border-black"
-                            onChange={(e) => filterProducts(e.target.value)}
-                        >
-                            <option value="">Filter by category</option>
-                            {categories.map((category) => {
-                                return (
-                                    <option key={category} value={category}>
-                                        <b>{category}</b>
-                                    </option>
-                                );
-                            })}
-                        </Form.Select>
+                <Form.Control
+                    type="text"
+                    name="searchKey"
+                    className="rounded-pill"
+                    style={{ width: "40%" }}
+                    placeholder='Search'
+                    onChange={searchProduct}
+                />
 
 
-                        <Form.Control
-                            type="text"
-                            name="searchKey"
-                            className="rounded-pill border-black"
-                            style={{ width: "10%" }}
-                            placeholder='Search'
-                            onChange={searchProduct}
-                        />
+            </Container>
 
-                    </div>
-                    <Container className=" d-flex flex-wrap gap-3">
-                        <Row>
-                            {products.results.map((product: any) => {
-                                return (
-                                    <Col key={product.id} sm={12} md={6} lg={4} xs={3}>
+            {isLoading ? (
+                <Loader />
+            ) : (
+                <>
+
+                    <Container>
+
+
+                        {products.status === "success" && (
+
+                            <Container className=" d-flex flex-wrap gap-3">
+
+                                {products.results.map((product: any) => {
+                                    return (
+
                                         <ProductList product={product} />
-                                    </Col>
-                                );
-                            })}
-                        </Row>
+
+                                    );
+                                })}
+
+                            </Container>
+
+                        )}
                     </Container>
-                </Container>
+                </>
             )}
 
         </>
