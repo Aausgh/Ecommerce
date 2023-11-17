@@ -1,9 +1,7 @@
 const ViewProduct = () => {
     return (
         <>
-            <Container>
-
-            </Container>
+            <div>Product Detail</div>
         </>
     )
 }

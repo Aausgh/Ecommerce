@@ -3,7 +3,6 @@ import NavMenu from "../../../components/Navbar";
 import { getData } from "../../../services/axios.service";
 import { Container, Form } from "react-bootstrap";
 import ProductList from "../../../components/user/ProductList";
-import ProductSkeleton from "../../../components/Loader/ProductSkeleton";
 import Loader from "../../../components/Loader";
 
 const UserProducts = () => {
