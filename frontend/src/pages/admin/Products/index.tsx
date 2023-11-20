@@ -267,9 +267,7 @@ const Products = () => {
                                                             <StyledTableCell align='right'>Price</StyledTableCell>
                                                             <StyledTableCell align='right'>Category</StyledTableCell>
                                                             <StyledTableCell align='right'>Brand</StyledTableCell>
-                                                            <StyledTableCell align='right'>
-                                                                  Created At
-                                                            </StyledTableCell>
+                                                            <StyledTableCell align='right'>Created At</StyledTableCell>
                                                             <StyledTableCell align='right'>Action</StyledTableCell>
                                                       </TableRow>
                                                 </TableHead>
@@ -303,27 +301,25 @@ const Products = () => {
                                                                         </StyledTableCell>
 
                                                                         <StyledTableCell align='right'>
-                                                                              {/* {new Date(product.createdAt).getFullYear() +
-                                                                              "-" +
-                                                                              new Date(product.createdAt).getMonth() +
-                                                                              "-" +
-                                                                              new Date(product.createdAt).getDate()} */}
 
                                                                               {moment(product.createdAt).format('YYYY-MM-DD')}
+
                                                                         </StyledTableCell>
 
                                                                         <StyledTableCell align='right'>
                                                                               <Button
-                                                                                    variant="primary"
+                                                                                    variant="plain"
+                                                                                    color='primary'
                                                                                     onClick={(e) => editProduct(product)}
                                                                               >
                                                                                     <FaEdit />
                                                                               </Button>
 
                                                                               <Button
-                                                                                    variant='danger'
+                                                                                    variant='plain'
+                                                                                    color='danger'
                                                                                     className='ms-2'
-                                                                                    onClick={e => deleteProduct(product.id)}
+                                                                                    onClick={(e) => deleteProduct(product.id)}
                                                                               >
                                                                                     <AiFillDelete />
                                                                               </Button>

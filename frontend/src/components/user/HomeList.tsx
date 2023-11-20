@@ -7,20 +7,25 @@ import Typography from '@mui/joy/Typography';
 
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Link } from '@mui/joy';
-import moment from 'moment';
+import { IconButton, Link } from '@mui/joy';
+import Stars from '../Rating';
+import { useNavigate } from 'react-router-dom';
+// import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+// import moment from 'moment';
 
 
 
 const HomeList = ({ product }: any) => {
 
+    const navigate = useNavigate();
+
     return (
-        <Card sx={{ width: 320 }}>
+        <Card sx={{ width: 193 }}>
 
             <div>
 
                 <Link
-                    href="/details"
+                    onClick={(e) => navigate('/products/${product.id}')}
                     fontWeight="md"
                     color="neutral"
                     textColor="text.primary"
@@ -28,11 +33,18 @@ const HomeList = ({ product }: any) => {
 
                 >
                     {<h5>
-                        {product.name.length > 25
-                            ? product.name.slice(0, 25) + "..."
+                        {product.name.length > 10
+                            ? product.name.slice(0, 10) + "..."
                             : product.name}
                     </h5>}
                 </Link>
+
+                <IconButton
+                    variant="plain"
+                    sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }}
+                >
+                    <FontAwesomeIcon icon={faCartPlus} size="lg" style={{ color: "#000000", }} />
+                </IconButton>
 
             </div>
 
@@ -44,7 +56,7 @@ const HomeList = ({ product }: any) => {
                 />
             </AspectRatio>
 
-            <CardContent orientation="horizontal">
+            <CardContent >
 
                 <div>
                     <Typography fontSize="lg" fontWeight="lg">
@@ -52,17 +64,8 @@ const HomeList = ({ product }: any) => {
                     </Typography>
                 </div>
 
+                <Stars product={product} />
 
-
-                <Button
-                    variant="solid"
-                    size="md"
-                    color="primary"
-                    aria-label="Explore Bahamas Islands"
-                    sx={{ ml: 'auto', alignSelf: 'center', fontWeight: 600 }}
-                >
-                    <FontAwesomeIcon icon={faCartPlus} size="lg" style={{ color: "#ffff", }} />
-                </Button>
             </CardContent>
 
 

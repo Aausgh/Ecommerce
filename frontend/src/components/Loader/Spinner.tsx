@@ -1,12 +1,10 @@
+import { Button } from "@mui/joy";
 
 function ButtonSpinner() {
     return (
-        <div className="spinner" >
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-        </div >
+        <Button loading variant="solid">
+            Solid
+        </Button>
     )
 }
 

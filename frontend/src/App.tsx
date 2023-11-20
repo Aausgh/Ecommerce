@@ -10,7 +10,8 @@ import SecureRoute from './routes/SecureRoute'
 import UserProducts from "./pages/user/Products";
 import Home from './pages/user/Home'
 import AdminRoute from "./routes/AdminRoute";
-import ProductDetail from './pages/user/ProductDetail'
+import ProductDetail from './components/user/ProductDetail'
+
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
 
           <Route path="/all/products" element={<UserProducts />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/details" element={<ProductDetail />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
         </Route>
       </Routes>
       <ToastContainer />

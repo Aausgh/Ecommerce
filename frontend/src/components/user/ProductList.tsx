@@ -1,11 +1,16 @@
 
+import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AspectRatio, Button, Card, CardContent, CardOverflow, Link, Typography } from '@mui/joy';
-import { Rating } from '@mui/material';
+import Stars from '../Rating';
+import { useNavigate } from 'react-router-dom';
 
 // import moment from "moment";
 
 
 const ProductList = ({ product }: any) => {
+
+    const navigate = useNavigate();
 
     return (
         <Card sx={{ width: 300, maxWidth: '100%', boxShadow: 'lg' }} className='mb-3'>
@@ -21,20 +26,15 @@ const ProductList = ({ product }: any) => {
             </CardOverflow>
 
             <CardContent>
-                <Typography level="body-xs">{product.category}</Typography>
+                <Typography level="body-xs" className="text-capitalize">{product.category}</Typography>
 
-                <Link
-                    href="/details"
-                    fontWeight="md"
-                    color="neutral"
-                    textColor="text.primary"
-                    overlay
 
-                >
+                <h5 onClick={(e) => navigate(`/products/${product.id}`)}>
                     {product.name.length > 35
                         ? product.name.slice(0, 35) + "..."
                         : product.name}
-                </Link>
+                </h5>
+
 
                 <Typography
                     level="title-lg"
@@ -43,18 +43,14 @@ const ProductList = ({ product }: any) => {
                     ${product.price}
                 </Typography>
 
-                <Rating
-                    name="read-only"
-                    value={product.averageRating}
-                    precision={0.5}
-                    readOnly
-                />
+                <Stars product={product} />
 
             </CardContent>
 
             <CardOverflow>
                 <Button variant="solid" color="danger" size="lg">
-                    Add to cart
+                    <FontAwesomeIcon icon={faCartPlus} size="lg" style={{ color: "#ffff", }} />
+
                 </Button>
             </CardOverflow>
 

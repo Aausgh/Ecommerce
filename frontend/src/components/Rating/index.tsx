@@ -1,7 +1,14 @@
-const Rating = () => {
+import { Rating } from '@mui/material';
+
+const Stars = ({ product }: any) => {
     return (
-        <div className="rating">Rating</div>
+        <Rating
+            name="read-only"
+            value={product.averageRating}
+            precision={0.5}
+            readOnly
+        />
     )
 }
 
-export default Rating;
+export default Stars;
