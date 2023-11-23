@@ -4,13 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AspectRatio, Button, Card, CardContent, CardOverflow, Link, Typography } from '@mui/joy';
 import Stars from '../Rating';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 // import moment from "moment";
 
 
-const ProductList = ({ product }: any) => {
+const ProductList = ({ product, addProdToCart, removeProdToCart }: any) => {
 
     const navigate = useNavigate();
+    const { cartItem } = useSelector((state: any) => state.product);
 
     return (
         <Card sx={{ width: 300, maxWidth: '100%', boxShadow: 'lg' }} className='mb-3'>
@@ -29,11 +31,19 @@ const ProductList = ({ product }: any) => {
                 <Typography level="body-xs" className="text-capitalize">{product.category}</Typography>
 
 
-                <h5 onClick={(e) => navigate(`/products/${product.id}`)}>
-                    {product.name.length > 35
-                        ? product.name.slice(0, 35) + "..."
-                        : product.name}
-                </h5>
+                <Link
+                    onClick={(e: any) => navigate(`/products/${product.id}`)}
+                    fontWeight="md"
+                    color="neutral"
+                    textColor="text.primary"
+                    overlay
+                >
+                    <h5 >
+                        {product.name.length > 35
+                            ? product.name.slice(0, 35) + "..."
+                            : product.name}
+                    </h5>
+                </Link>
 
 
                 <Typography
@@ -48,7 +58,21 @@ const ProductList = ({ product }: any) => {
             </CardContent>
 
             <CardOverflow>
-                <Button variant="solid" color="danger" size="lg">
+                <Button
+                    variant="solid"
+                    color={
+                        cartItem.find((item: any) => item.id === product.id)
+                            ? "success"
+                            : "danger"
+                    }
+                    size="lg"
+                    onClick={(e) => {
+                        cartItem.find((item: any) => item.productId === product.id)
+                            ? removeProdToCart(product)
+                            : addProdToCart(product);
+                    }}
+                >
+
                     <FontAwesomeIcon icon={faCartPlus} size="lg" style={{ color: "#ffff", }} />
 
                 </Button>

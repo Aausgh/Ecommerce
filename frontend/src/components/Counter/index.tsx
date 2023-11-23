@@ -1,56 +1,81 @@
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Card, CardContent, IconButton, Typography } from '@mui/joy';
-import { useState } from 'react'
+import { Button, Typography } from '@mui/joy';
+import { InputGroup } from 'react-bootstrap';
 
 
-const Counter = () => {
+const Counter = ({ product, qty, increment, decrement }: any) => {
 
-
-    let [count, setCount] = useState(0);
-
-    const increment = (e: any) => {
-        e.preventDefault();
-        setCount(count + 1);
-
-    }
-
-    const decrement = (e: any) => {
-        e.preventDefault();
-        setCount(count - 1);
-    }
 
 
     return (
-        <Card orientation="horizontal" variant="outlined" sx={{ width: 140 }}>
+        <>
+            <InputGroup className='mb-3' style={{ width: 150 }}>
 
-
-            <CardContent orientation="horizontal">
-                <IconButton
-                    variant="soft"
-                    color="neutral"
-                    size="sm"
-                    onClick={decrement}>
-
+                <Button
+                    className='px-3'
+                    onClick={decrement}
+                    disabled={qty <= 1}
+                    variant="outlined"
+                >
                     <FontAwesomeIcon icon={faMinus} style={{ color: "#000000", }} />
+                </Button>
 
-                </IconButton>
+                <Typography
+                    fontSize="xl"
+                    fontWeight="lg"
+                    className='text-center form-control 
+                    onChange={(e) => setQty(e.target.value)}'>
+                    {qty}
+                </Typography>
 
-                <Typography fontSize="xl" fontWeight="lg">{count}</Typography>
-
-                <IconButton
-                    variant="soft"
-                    color="neutral"
-                    size="sm"
-                    onClick={increment}>
+                <Button
+                    className='btn-light px-3'
+                    onClick={increment}
+                    disabled={qty >= product.data.countInStock}
+                    variant="outlined">
 
                     <FontAwesomeIcon icon={faPlus} style={{ color: "#000000", }} />
+                </Button>
 
-                </IconButton>
-            </CardContent>
+            </InputGroup>
+            {/* <Card orientation="horizontal" variant="outlined" sx={{ width: 140 }}>
 
-        </Card>
+
+                <CardContent orientation="horizontal">
+                    <IconButton
+                        variant="soft"
+                        color="neutral"
+                        size="sm"
+                        onClick={decrement}
+                        disabled={count <= 1}
+                    >
+
+                        <FontAwesomeIcon icon={faMinus} style={{ color: "#000000", }} />
+
+                    </IconButton>
+
+                    <Typography fontSize="xl" fontWeight="lg">{count}</Typography>
+
+                    <IconButton
+                        variant="soft"
+                        color="neutral"
+                        size="sm"
+                        onClick={increment}
+
+                        disabled={count >= product.countInStock}
+                    >
+
+                        <FontAwesomeIcon icon={faPlus} style={{ color: "#000000", }} />
+
+                    </IconButton>
+                </CardContent>
+
+            </Card> */}
+        </>
     );
+
 };
+
 
 export default Counter;

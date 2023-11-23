@@ -2,7 +2,7 @@
 import { Form } from "react-bootstrap";
 
 
-const Search = ({ searchProduct }: any) => {
+const Search = ({ searchProduct, product }: any) => {
 
 
     return (

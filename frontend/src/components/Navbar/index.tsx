@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faUser } from '@fortawesome/free-solid-svg-icons'
 import { Link } from "react-router-dom";
 import { Typography } from "@mui/material";
+import { IconButton } from "@mui/joy";
 
 
 
@@ -61,7 +62,11 @@ const Navmenu = () => {
                         </NavDropdown>
 
 
-                        {role === "user" && <FontAwesomeIcon icon={faCartShopping} size="lg" style={{ color: "#f4f4f5", }} />}
+                        {role === "user" &&
+                            <Link to={"/cart"}>
+                                <FontAwesomeIcon icon={faCartShopping} size="lg" style={{ color: "#f4f4f5", }} />
+                            </Link>
+                        }
 
                     </Nav>
 

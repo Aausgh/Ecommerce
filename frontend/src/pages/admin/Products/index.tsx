@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux'
 import { Container } from '@mui/material'
 import ProductFormModal from '../../../components/admin/forms/ProductFormModal'
 import Navmenu from '../../../components/Navbar'
+import Pagination from '../../../components/Pagination'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
       [`&.${tableCellClasses.head}`]: {
@@ -51,7 +52,7 @@ const Products = () => {
       const [itemOffset, setItemOffset] = useState(0);
       const [pageCount, setPageCount] = useState(0);
 
-      let itemsPerPage = 8;
+      let itemsPerPage = 12;
       const [product, setProduct] = useState<any>({
             name: "",
             brand: "",
@@ -239,9 +240,8 @@ const Products = () => {
             setProduct(product);
       };
 
-      const handlePageChange = (event: any) => {
-            const newOffset =
-                  (event.selected * itemsPerPage) % originalProduct.results.length;
+      const handlePageChange = ({ selectedItem }: any) => {
+            const newOffset = selectedItem * itemsPerPage;
             setItemOffset(newOffset);
       };
 
@@ -343,26 +343,7 @@ const Products = () => {
                                     />
 
                                     {pageCount > 1 && (
-                                          <ReactPaginate
-                                                previousLabel="<"
-                                                nextLabel=">"
-                                                pageClassName="page-item"
-                                                pageLinkClassName="page-link"
-                                                previousClassName="page-item"
-                                                previousLinkClassName="page-link"
-                                                nextClassName="page-item"
-                                                nextLinkClassName="page-link"
-                                                breakLabel="..."
-                                                breakClassName="page-item"
-                                                breakLinkClassName="page-link"
-                                                pageCount={pageCount}
-                                                marginPagesDisplayed={2}
-                                                pageRangeDisplayed={5}
-                                                onPageChange={handlePageChange}
-                                                containerClassName="pagination"
-                                                activeClassName="active"
-
-                                          />
+                                          <Pagination pageCount={pageCount} handlePageChange={handlePageChange} itemOffset={itemOffset} itemsPerPage={itemsPerPage} />
                                     )}
 
 

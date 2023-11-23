@@ -7,7 +7,7 @@ import Typography from '@mui/joy/Typography';
 
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconButton, Link } from '@mui/joy';
+import { Chip, IconButton, Link } from '@mui/joy';
 import Stars from '../Rating';
 import { useNavigate } from 'react-router-dom';
 // import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
@@ -25,19 +25,27 @@ const HomeList = ({ product }: any) => {
             <div>
 
                 <Link
-                    onClick={(e) => navigate('/products/${product.id}')}
+                    onClick={(e) => navigate(`/products/${product.id}`)}
                     fontWeight="md"
                     color="neutral"
                     textColor="text.primary"
                     overlay
 
                 >
-                    {<h5>
+                    {<Typography
+                        fontSize="xl"
+                        fontWeight="xl"
+                        level="title-lg"
+                        sx={{ fontWeight: 'xl' }}
+                        className="title text-dark ">
                         {product.name.length > 10
                             ? product.name.slice(0, 10) + "..."
                             : product.name}
-                    </h5>}
+                    </Typography>}
                 </Link>
+
+
+
 
                 <IconButton
                     variant="plain"
@@ -67,6 +75,17 @@ const HomeList = ({ product }: any) => {
                 <Stars product={product} />
 
             </CardContent>
+
+            {product.countInStock < 5 && (
+                <Typography
+                    endDecorator={
+                        <Chip component="span" size="sm" variant="soft" color="success">
+                            Low In Stock
+                        </Chip>
+                    }
+                >
+                </Typography>
+            )}
 
 
 
