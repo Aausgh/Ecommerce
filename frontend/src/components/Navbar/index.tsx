@@ -4,23 +4,28 @@ import { logout } from "../../slice/authSlice";
 import { successToast } from "../../services/toaster.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faUser } from '@fortawesome/free-solid-svg-icons'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
-import { IconButton } from "@mui/joy";
+import { resetCart } from "../../slice/productSlice";
+import { resetOrder } from "../../slice/orderSlice";
+import Logo from "../../assets/images/logo.png";
+
 
 
 
 const Navmenu = () => {
 
-
     const { name, role } = useSelector((state: any) => state.auth);
 
-
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
 
     const logoutHandler = () => {
         localStorage.removeItem("persist:root");
         dispatch(logout());
+        dispatch(resetCart());
+        dispatch(resetOrder());
         successToast("Logged out successfully");
     };
 
@@ -28,8 +33,8 @@ const Navmenu = () => {
         <Navbar expand="lg" style={{ background: "#f95706" }}>
             <Container className="d-flex justify-content-around">
 
-                <Navbar.Brand href="#" className="text-white fs-2">
-                    Daraz
+                <Navbar.Brand href="/home" >
+                    <img src={Logo} alt="Logo" style={{ height: "60px", marginRight: "10px" }} />
                 </Navbar.Brand>
 
 
@@ -53,7 +58,9 @@ const Navmenu = () => {
                                 {name}
                             </span>} id="basic-nav-dropdown" >
 
-                            <NavDropdown.Item >Profile</NavDropdown.Item>
+
+                            <NavDropdown.Item onClick={() => navigate('/profile')} >Profile</NavDropdown.Item>
+
 
                             <NavDropdown.Item onClick={logoutHandler}>
                                 Logout

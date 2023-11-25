@@ -12,18 +12,18 @@ import { useEffect, useState } from 'react';
 import { getData } from '../../services/axios.service';
 import Loader from '../Loader';
 import Navmenu from '../Navbar';
-import { Rating, Input, FormControl } from '@mui/material';
+import { Rating, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { Chip, Container } from '@mui/joy';
 
 import Search from '../Search';
-import { InputGroup } from "react-bootstrap";
+import { Col, ListGroup, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch } from 'react-redux';
 import { successToast } from '../../services/toaster.service';
 import { addToCart } from "../../slice/productSlice";
 import { payloadForCartItem } from "../../helpers/product";
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+
 
 const ProductDetail = () => {
 
@@ -98,7 +98,7 @@ const ProductDetail = () => {
                                         flexWrap: 'wrap'
                                     }}
                                 >
-                                    <AspectRatio flex ratio="1" maxHeight={482} sx={{ minWidth: 482 }}>
+                                    <AspectRatio variant="outlined" ratio="16/9" objectFit="cover" maxHeight={482} sx={{ minWidth: 482 }}>
                                         <img
                                             src={product.data.productImage}
 
@@ -116,7 +116,7 @@ const ProductDetail = () => {
                                             sx={{ mt: 1, fontWeight: 'xl' }}
                                             className="title text-dark "
                                             endDecorator={
-                                                <Chip component="span" size="sm" variant="soft" color="success">
+                                                <Chip size="sm" variant="outlined" color="neutral">
                                                     {product.data.countInStock > 0
                                                         ? product.data.countInStock < 5
                                                             ? "Low In Stock"
@@ -130,9 +130,7 @@ const ProductDetail = () => {
 
 
                                         <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center', '& > button': { flex: 1 } }}>
-                                            <Typography fontSize="lg" fontWeight="lg">
-                                                Brand
-                                            </Typography>
+
 
                                             <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
                                                 {product.data.brand}
@@ -157,7 +155,7 @@ const ProductDetail = () => {
                                                     level="h3"
                                                     className="title text-dark "
                                                 >
-                                                    ${product.data.price}
+                                                    Rs. {product.data.price}
                                                 </Typography>
                                             </div>
 
@@ -176,45 +174,40 @@ const ProductDetail = () => {
 
                                         <hr />
 
-                                        <InputGroup className='mb-3' style={{ width: 150 }}>
+                                        <ListGroup.Item className="mt-3 mb-3">
+                                            <Row className='d-flex align-items-center'>
+                                                <Col >Quantity</Col>
+                                                <Col>
+                                                    <FormControl
+                                                        variant="standard"
+                                                        sx={{ minWidth: 110 }}
+                                                    >
+                                                        <InputLabel id="demo-simple-select-filled-label">
+                                                            Choose Quantity
+                                                        </InputLabel>
+                                                        <Select
+                                                            onChange={(e) => setQty(e.target.value)}
+                                                            value={qty}
+                                                            label="Choose quantity"
+                                                            labelId="demo-simple-select-filled-label"
+                                                            id="demo-simple-select-filled"
+                                                        >
+                                                            {[...Array(product.data.countInStock)].map(
+                                                                (_, index) => {
+                                                                    return (
+                                                                        <MenuItem key={index + 1} value={index + 1}>
+                                                                            {index + 1}
+                                                                        </MenuItem>
+                                                                    );
+                                                                }
+                                                            )}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
 
-                                            <Typography >Quantity</Typography>
-                                            <div className="d-flex">
-                                                <Button
-                                                    className='px-3'
-                                                    onClick={() => setQty((prevQty) => String(Math.max(1, parseInt(prevQty, 10) - 1)))}
-
-                                                    disabled={parseInt(qty, 10) <= 1}
-                                                    variant="outlined"
-                                                >
-                                                    <FontAwesomeIcon icon={faMinus} style={{ color: "#000000" }} />
-                                                </Button>
-
-                                                <FormControl
-                                                    variant="standard"
-                                                    sx={{ display: 'flex', alignItems: 'center' }}
-                                                    className="border"
-                                                >
-
-                                                    <Input
-                                                        id="quantity"
-                                                        type="number"
-                                                        inputProps={{ min: 1, max: product.data.countInStock }}
-                                                        value={qty}
-                                                        onChange={(e) => setQty(e.target.value)}
-                                                    />
-                                                </FormControl>
-
-                                                <Button
-                                                    className='btn-light px-3'
-                                                    onClick={() => setQty((prevQty) => String(Math.min(product.data.countInStock, parseInt(prevQty, 10) + 1)))}
-                                                    disabled={qty >= product.data.countInStock}
-                                                    variant="outlined"
-                                                >
-                                                    <FontAwesomeIcon icon={faPlus} style={{ color: "#000000" }} />
-                                                </Button>
-                                            </div>
-                                        </InputGroup>
+                                        <hr />
 
 
 

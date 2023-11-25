@@ -12,10 +12,10 @@ import Home from './pages/user/Home'
 import AdminRoute from "./routes/AdminRoute";
 import ProductDetail from './components/user/ProductDetail'
 import Cart from './components/user/Cart'
-import Shipping from "./pages/user/Shipping";
-import PaymentMethod from "./pages/user/PaymentMethod";
 import CheckoutState from "./context/CheckoutState";
 import ParentContainer from "./pages/user/ParentContainer";
+import Success from "./pages/Success";
+import Profile from './components/user/Profile'
 
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
 
           <Route path="/all/products" element={<UserProducts />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/checkout-step"
             element={
               <CheckoutState>
@@ -43,6 +44,7 @@ function App() {
           />
           <Route path="/home" element={<Home />} />
           <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/payment/success" element={<Success />} />
         </Route>
       </Routes>
       <ToastContainer />

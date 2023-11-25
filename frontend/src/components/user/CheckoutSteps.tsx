@@ -1,8 +1,8 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
+import { Container } from "@mui/joy";
 
 const steps = ["Shipping", "Payment Method", "Checkout"];
 
@@ -52,7 +52,7 @@ const CheckoutSteps = ({ activeStep, setActiveStep }: any) => {
     };
 
     return (
-        <Box sx={{ width: "100%" }}>
+        <Container className="mt-3 mb-3">
             <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                     const stepProps: { completed?: boolean } = {};
@@ -64,13 +64,13 @@ const CheckoutSteps = ({ activeStep, setActiveStep }: any) => {
                         stepProps.completed = false;
                     }
                     return (
-                        <Step key={label} {...stepProps}>
+                        <Step key={label}  {...stepProps}>
                             <StepLabel {...labelProps}>{label}</StepLabel>
                         </Step>
                     );
                 })}
             </Stepper>
-        </Box>
+        </Container>
     );
 };
 

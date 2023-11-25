@@ -85,6 +85,22 @@ const Home = () => {
                                     </Container>
 
                                 </Container>
+
+                                <Container className='p-3 rounded mt-2 mb-3'>
+                                    <h3 className='text-black mb-1 ms-3'>Low In Stock</h3>
+
+                                    <Container className='d-flex flex-row flex-wrap gap-3'>
+                                        {products.results
+                                            .filter((product: any) => product.countInStock < 5)
+                                            .slice(0, 8)
+                                            .map((product: any) => (
+
+                                                <HomeList product={product} />
+
+                                            ))}
+                                    </Container>
+
+                                </Container>
                             </>
 
                         )}

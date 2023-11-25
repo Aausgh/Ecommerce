@@ -56,7 +56,7 @@ const HomeList = ({ product }: any) => {
 
             </div>
 
-            <AspectRatio minHeight="120px" maxHeight="200px">
+            <AspectRatio maxHeight="200px" sx={{ minWidth: 120 }}>
                 <img
                     src={product.productImage}
                     loading="lazy"
@@ -68,7 +68,7 @@ const HomeList = ({ product }: any) => {
 
                 <div>
                     <Typography fontSize="lg" fontWeight="lg">
-                        ${product.price}
+                        Rs. {product.price}
                     </Typography>
                 </div>
 
@@ -79,7 +79,7 @@ const HomeList = ({ product }: any) => {
             {product.countInStock < 5 && (
                 <Typography
                     endDecorator={
-                        <Chip component="span" size="sm" variant="soft" color="success">
+                        <Chip size="sm" variant="outlined" color="neutral">
                             Low In Stock
                         </Chip>
                     }

@@ -1,10 +1,11 @@
 
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AspectRatio, Button, Card, CardContent, CardOverflow, Link, Typography } from '@mui/joy';
+import { AspectRatio, Button, Card, CardContent, CardOverflow, Chip, Link, Typography } from '@mui/joy';
 import Stars from '../Rating';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Image from 'react-bootstrap/Image';
 
 // import moment from "moment";
 
@@ -19,17 +20,16 @@ const ProductList = ({ product, addProdToCart, removeProdToCart }: any) => {
 
             <CardOverflow>
                 <AspectRatio sx={{ minWidth: 200 }}>
-                    <img
+                    <Image
                         src={product.productImage}
-                        loading="lazy"
                         alt=""
+                        thumbnail
                     />
                 </AspectRatio>
             </CardOverflow>
 
             <CardContent>
                 <Typography level="body-xs" className="text-capitalize">{product.category}</Typography>
-
 
                 <Link
                     onClick={(e: any) => navigate(`/products/${product.id}`)}
@@ -38,19 +38,34 @@ const ProductList = ({ product, addProdToCart, removeProdToCart }: any) => {
                     textColor="text.primary"
                     overlay
                 >
-                    <h5 >
+                    <Typography
+
+                        level="h4"
+
+                        className="title text-dark "
+                        endDecorator={
+                            <Chip size="sm" variant="outlined" color="neutral">
+                                {product.countInStock > 0
+                                    ? product.countInStock < 5
+                                        ? "Low In Stock"
+                                        : "In Stock"
+                                    : "Out of Stock"}
+                            </Chip>
+                        }
+                    >
                         {product.name.length > 35
                             ? product.name.slice(0, 35) + "..."
                             : product.name}
-                    </h5>
+                    </Typography>
+
                 </Link>
 
 
                 <Typography
                     level="title-lg"
-                    sx={{ mt: 1, fontWeight: 'xl' }}
+                    sx={{ mt: 1, fontWeight: 'lg' }}
                 >
-                    ${product.price}
+                    <b>Rs. </b> {product.price}
                 </Typography>
 
                 <Stars product={product} />

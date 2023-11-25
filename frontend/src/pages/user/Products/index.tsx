@@ -128,17 +128,19 @@ const UserProducts = () => {
 
                             <Container className=" d-flex flex-wrap gap-3">
 
-                                {products.results.map((product: any) => {
-                                    return (
+                                {products.results
+                                    .filter((product: any) => product.countInStock > 0)
+                                    .map((product: any) => {
+                                        return (
 
-                                        <ProductList key={product.id}
-                                            product={product}
-                                            addProdToCart={addProdToCart}
-                                            removeProdToCart={removeProdToCart}
-                                        />
+                                            <ProductList key={product.id}
+                                                product={product}
+                                                addProdToCart={addProdToCart}
+                                                removeProdToCart={removeProdToCart}
+                                            />
 
-                                    );
-                                })}
+                                        );
+                                    })}
 
                             </Container>
 
